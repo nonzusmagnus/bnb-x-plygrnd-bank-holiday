@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLYGRND x Bingo N Beats — Storyboard (12 Shots)</title>
+<style>
+  :root{
+    --bg: #0a0e27;
+    --bg-2: #050714;
+    --panel: #12173a;
+    --cyan: #00f0ff;
+    --magenta: #ff2ee6;
+    --gold: #ffd400;
+    --ink: #eef2ff;
+    --ink-dim: #8f96c9;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Courier New', ui-monospace, monospace;
+    overflow-x: hidden;
+  }
+  body::before{
+    content: "";
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px,
+      transparent 1px, transparent 3px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 20px 100px;
+  }
+  header{ text-align: center; margin-bottom: 40px; }
+  .select-tag{
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 4px 12px;
+    margin-bottom: 20px;
+    transform: skewX(-8deg);
+  }
+  h1{
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: clamp(30px, 7vw, 52px);
+    line-height: 1.02;
+    margin: 0 0 10px;
+    text-shadow: 3px 3px 0 var(--magenta), 6px 6px 0 var(--cyan);
+    transform: skewX(-3deg);
+  }
+  .subhead{ font-size: 14px; color: var(--cyan); letter-spacing: 0.08em; }
+  .hint{
+    margin: 18px auto 0;
+    max-width: 640px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-dim);
+    border: 1px dashed rgba(0,240,255,0.4);
+    padding: 10px 14px;
+  }
+  .hint b{ color: var(--gold); }
+
+  .scene-label{
+    margin: 40px 0 14px;
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  }
+  .scene-label .num{ font-size: 11px; letter-spacing: 0.12em; color: var(--gold); }
+  .scene-label .title{
+    font-family: 'Impact','Arial Black',sans-serif;
+    font-size: 22px; color: var(--cyan); letter-spacing: 0.02em;
+    transform: skewX(-2deg);
+  }
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  .shot{
+    background: var(--panel);
+    border: 1px solid rgba(0,240,255,0.25);
+    border-left: 4px solid var(--magenta);
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .shot-head{
+    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  }
+  .shot-no{
+    font-family: 'Impact','Arial Black',sans-serif;
+    font-size: 18px; color: var(--gold); letter-spacing: 0.04em;
+  }
+  .shot-size{
+    font-size: 10.5px; letter-spacing: 0.12em; color: var(--bg);
+    background: var(--cyan); padding: 2px 8px; transform: skewX(-8deg);
+    white-space: nowrap;
+  }
+  .frame{
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 2px dashed rgba(0,240,255,0.45);
+    background: var(--bg-2);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .frame:hover, .frame.dragover{ border-color: var(--gold); }
+  .frame .ph{
+    font-size: 11.5px; letter-spacing: 0.08em; color: var(--ink-dim);
+    padding: 0 16px; line-height: 1.7; pointer-events: none;
+  }
+  .frame .ph b{ color: var(--cyan); display: block; font-size: 13px; }
+  .frame img{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; display: none;
+  }
+  .frame.has-img img{ display: block; }
+  .frame.has-img .ph{ display: none; }
+  .frame .replace{
+    position: absolute; right: 6px; bottom: 6px;
+    font-size: 10px; letter-spacing: 0.08em;
+    background: rgba(5,7,20,0.85); color: var(--gold);
+    border: 1px solid var(--gold); padding: 3px 8px; display: none;
+  }
+  .frame.has-img .replace{ display: block; }
+  .frame input[type="file"]{ display: none; }
+  .action{ font-size: 13px; line-height: 1.55; color: var(--ink); }
+  .action .who{ color: var(--gold); font-weight: bold; }
+  .action .dir{ font-style: italic; color: var(--ink-dim); }
+  .jarvis .who{ color: var(--magenta); }
+  .fname{ font-size: 10.5px; color: var(--ink-dim); letter-spacing: 0.04em; min-height: 14px; }
+  .shot textarea{
+    width: 100%; min-height: 44px; resize: vertical;
+    background: var(--bg-2); color: var(--ink);
+    border: 1px solid rgba(143,150,201,0.4);
+    font-family: inherit; font-size: 12px; padding: 8px;
+  }
+  .shot textarea::placeholder{ color: var(--ink-dim); }
+  footer{
+    text-align: center; margin-top: 48px;
+    font-size: 11px; color: var(--ink-dim); letter-spacing: 0.08em;
+  }
+  @media print{
+    body::before{ display: none; }
+    .hint, .frame .replace{ display: none; }
+    .wrap{ padding: 0; }
+    .shot{ break-inside: avoid; }
+  }
+  @media (max-width: 480px){
+    .wrap{ padding: 32px 14px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="select-tag">STORYBOARD · 12 SHOTS</div>
+    <h1>PLYGRND<br>x Bingo N Beats</h1>
+    <div class="subhead">BANK HOLIDAY SPECIAL — '90s SELECT MODE · SHOOT BOARD</div>
+    <div class="hint"><b>How to use:</b> click any empty frame (or drag &amp; drop an image onto it) to add your still / reference / AI frame. Click a filled frame to replace. Add notes per shot below each frame. Use browser Print → Save as PDF to share.</div>
+  </header>
+
+  <!-- SCENE 1 -->
+  <div class="scene-label"><span class="num">SCENE 01</span><span class="title">INT. LIVING ROOM / SETUP SPACE</span></div>
+  <div class="grid">
+    <div class="shot" data-shot="1">
+      <div class="shot-head"><span class="shot-no">SHOT 1</span><span class="shot-size">WIDE · SOFA</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 1 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who">KWAMZ:</span> Halloween's coming bro, what we doing.<br><span class="dir">Both on sofa, hoodies on, cold-outside vibe. Establish the room.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="2">
+      <div class="shot-head"><span class="shot-no">SHOT 2</span><span class="shot-size">MEDIUM · DAMI</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 2 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who">DAMI:</span> <span class="dir">(turns to camera slightly)</span> We need to find the next way to PLY though.</div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="3">
+      <div class="shot-head"><span class="shot-no">SHOT 3</span><span class="shot-size">LOW · CEILING UP</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 3 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who">KWAMZ:</span> <span class="dir">(looks up, addressing the room)</span> Jarvis, we want to PLY.<br><span class="dir">Lights shift · soft chime/hum.</span><br><span class="who" style="color:var(--magenta)">JARVIS (V.O.):</span> Good afternoon, PLYRs. Choose your theme.</div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+  </div>
+
+  <!-- SCENE 2 -->
+  <div class="scene-label"><span class="num">SCENE 02</span><span class="title">THEME SELECT</span></div>
+  <div class="grid">
+    <div class="shot" data-shot="4">
+      <div class="shot-head"><span class="shot-no">SHOT 4</span><span class="shot-size">GRAPHIC · HUD FLICK</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 4 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="dir">HUD flicks fast: CARTOONS… TV SHOWS… SUPERHEROES… then 90s.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="5">
+      <div class="shot-head"><span class="shot-no">SHOT 5</span><span class="shot-size">GRAPHIC · LOCK-IN</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 5 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who" style="color:var(--magenta)">JARVIS (V.O.):</span> 90s.<br><span class="dir">HUD graphic: PLYGRND x BINGO N BEATS '90s. Beat lands, theme locked in.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="6">
+      <div class="shot-head"><span class="shot-no">SHOT 6</span><span class="shot-size">TWO-SHOT · REACTION</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 6 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who">DAMI:</span> <span class="dir">(beat, lights up)</span> Ooh, 90s… Bingo and Beats edition.<br><span class="who">KWAMZ:</span> <span class="dir">(nodding)</span> What a time.<br><span class="who" style="color:var(--magenta)">JARVIS (V.O.):</span> Choose your PLYR. Suit up accordingly.</div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+  </div>
+
+  <!-- SCENE 3 -->
+  <div class="scene-label"><span class="num">SCENE 03</span><span class="title">THE SELECT SCREEN (TEKKEN STYLE)</span></div>
+  <div class="grid">
+    <div class="shot" data-shot="7">
+      <div class="shot-head"><span class="shot-no">SHOT 7</span><span class="shot-size">WIDE · SELECT SCREEN</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 7 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="dir">Tekken-style character select HUD. Cards swipe left to right — Dami, Kwamz and models as 90s-styled PLYRs.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="8">
+      <div class="shot-head"><span class="shot-no">SHOT 8</span><span class="shot-size">CLOSE · PLYR CARDS</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 8 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="dir">Cards: BINGO BADDIE · HIGH ROLLER · BINGO BARBIE · CHAOS AGENT. Dami leans in, watching cards fly past.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="9">
+      <div class="shot-head"><span class="shot-no">SHOT 9</span><span class="shot-size">MEDIUM · COSTUME TALK</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 9 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who">KWAMZ:</span> <span class="dir">(looking at the cards)</span> Costume's gotta match the PLYR though.<br><span class="who">DAMI:</span> Now we're talking.<br><span class="dir">Rubs hands together, nods.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="10">
+      <div class="shot-head"><span class="shot-no">SHOT 10</span><span class="shot-size">TWO-SHOT · READY + BUMP</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 10 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="who">BOTH:</span> <span class="dir">(to camera/ceiling)</span> Jarvis, are you ready?<br><span class="who" style="color:var(--magenta)">JARVIS (V.O.):</span> Yes, gents. Costumes locked in. Let's bingo, let's PLY.<br><span class="dir">Fist bump.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+  </div>
+
+  <!-- SCENE 4 -->
+  <div class="scene-label"><span class="num">SCENE 04</span><span class="title">LOGO STING</span></div>
+  <div class="grid">
+    <div class="shot" data-shot="11">
+      <div class="shot-head"><span class="shot-no">SHOT 11</span><span class="shot-size">BLACKOUT · BEAT DROP</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 11 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="dir">Quick cut to black. Beat drops.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+    <div class="shot" data-shot="12">
+      <div class="shot-head"><span class="shot-no">SHOT 12</span><span class="shot-size">GRAPHIC · LOGO + INFO</span></div>
+      <div class="frame"><span class="ph"><b>＋ ADD IMAGE</b>click or drop file here</span><img alt="Shot 12 reference"><span class="replace">REPLACE</span><input type="file" accept="image/*"></div>
+      <div class="action"><span class="dir">Logo reveal: BINGO N BEATS x PLYGRND — BANK HOLIDAY SPECIAL. Date / venue / ticket link card underneath.</span></div>
+      <div class="fname"></div>
+      <textarea placeholder="Notes: lens, lighting, blocking…"></textarea>
+    </div>
+  </div>
+
+  <footer>MAGNUS FOREVER — STORYBOARD · 12 SHOTS</footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.shot').forEach(function(shot){
+    var frame = shot.querySelector('.frame');
+    var input = shot.querySelector('input[type="file"]');
+    var img = shot.querySelector('img');
+    var fname = shot.querySelector('.fname');
+
+    frame.addEventListener('click', function(){ input.click(); });
+
+    input.addEventListener('change', function(){
+      if (input.files && input.files[0]) loadFile(input.files[0]);
+    });
+
+    ['dragenter','dragover'].forEach(function(ev){
+      frame.addEventListener(ev, function(e){ e.preventDefault(); frame.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+      frame.addEventListener(ev, function(e){ e.preventDefault(); frame.classList.remove('dragover'); });
+    });
+    frame.addEventListener('drop', function(e){
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) loadFile(f);
+    });
+
+    function loadFile(f){
+      if (!f.type || f.type.indexOf('image/') !== 0) return;
+      var reader = new FileReader();
+      reader.onload = function(e){
+        img.src = e.target.result;
+        frame.classList.add('has-img');
+        fname.textContent = f.name;
+      };
+      reader.readAsDataURL(f);
+    }
+  });
+</script>
+</body>
+</html>
