@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Holiday Special — Script</title>
+<style>
+  :root{
+    --bg: #0a0e27;
+    --bg-2: #050714;
+    --panel: #12173a;
+    --cyan: #00f0ff;
+    --magenta: #ff2ee6;
+    --gold: #ffd400;
+    --ink: #eef2ff;
+    --ink-dim: #8f96c9;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg: #0a0e27;
+      --bg-2: #050714;
+      --panel: #12173a;
+      --ink: #eef2ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Courier New', ui-monospace, monospace;
+    overflow-x: hidden;
+  }
+  body::before{
+    content: "";
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px,
+      transparent 1px, transparent 3px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 20px 100px;
+  }
+  header{
+    text-align: center;
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .select-tag{
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 4px 12px;
+    margin-bottom: 20px;
+    transform: skewX(-8deg);
+  }
+  h1{
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: clamp(34px, 8vw, 58px);
+    line-height: 1.02;
+    margin: 0 0 10px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    text-shadow:
+      3px 3px 0 var(--magenta),
+      6px 6px 0 var(--cyan);
+    transform: skewX(-3deg);
+  }
+  .subhead{
+    font-size: 14px;
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+  }
+  .datebar{
+    margin-top: 22px;
+    display: inline-flex;
+    gap: 14px;
+    border: 1px solid var(--cyan);
+    padding: 8px 18px;
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+  .datebar b{ color: var(--gold); }
+
+  .scene{
+    background: var(--panel);
+    border: 1px solid rgba(0,240,255,0.25);
+    border-left: 4px solid var(--magenta);
+    padding: 24px 24px 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .scene-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .scene-num{
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+  }
+  .scene-title{
+    font-family: 'Impact','Arial Black',sans-serif;
+    font-size: 20px;
+    color: var(--cyan);
+    letter-spacing: 0.02em;
+    transform: skewX(-2deg);
+  }
+  .stage{
+    font-style: italic;
+    color: var(--ink-dim);
+    font-size: 13.5px;
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+  .line{
+    margin: 10px 0;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .who{
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 0.03em;
+  }
+  .jarvis .who{ color: var(--magenta); }
+  .jarvis{
+    border-left: 2px solid var(--magenta);
+    padding-left: 10px;
+    margin-left: 2px;
+  }
+  .beat{
+    text-align: center;
+    color: var(--ink-dim);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 14px 0;
+  }
+  .beat::before, .beat::after{
+    content: "—";
+    color: var(--cyan);
+    margin: 0 10px;
+  }
+
+  .cards{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .plyr-card{
+    border: 1px solid var(--gold);
+    background: linear-gradient(180deg, rgba(255,212,0,0.08), transparent);
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+  }
+
+  .logo-scene{
+    text-align: center;
+    background: var(--bg-2);
+    border: 1px solid var(--gold);
+  }
+  .logo-scene .scene-title{
+    color: var(--gold);
+    text-align: center;
+    width: 100%;
+  }
+  .logo-block{
+    margin: 18px 0;
+    font-family: 'Impact','Arial Black',sans-serif;
+    font-size: clamp(22px, 6vw, 32px);
+    color: var(--ink);
+    text-shadow: 2px 2px 0 var(--magenta), 4px 4px 0 var(--cyan);
+    line-height: 1.15;
+  }
+  .ticket{
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--ink-dim);
+    border-top: 1px dashed var(--ink-dim);
+    padding-top: 8px;
+  }
+
+  footer{
+    text-align: center;
+    margin-top: 48px;
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 480px){
+    .wrap{ padding: 32px 14px 80px; }
+    .scene{ padding: 18px 16px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="select-tag">PRESS START</div>
+    <h1>PLYGRND<br>x Bingo N Beats</h1>
+    <div class="subhead">BANK HOLIDAY SPECIAL — '90s SELECT MODE</div>
+    <div class="datebar">SCRIPT V2 &nbsp;·&nbsp; <b>25 OCT</b></div>
+  </header>
+
+  <section class="scene">
+    <div class="scene-head">
+      <div class="scene-num">SCENE 01</div>
+      <div class="scene-title">INT. LIVING ROOM / SETUP SPACE</div>
+    </div>
+    <div class="stage">Kwamz and Dami on the sofa, casual energy, hoodies on, cold outside vibe.</div>
+    <div class="line"><span class="who">KWAMZ:</span> Halloween's coming bro, what we doing.</div>
+    <div class="line"><span class="who">DAMI:</span> <span class="stage" style="display:inline">(turns to camera slightly)</span> We need to find the next way to PLY though.</div>
+    <div class="line"><span class="who">KWAMZ:</span> Exactly. <span class="stage" style="display:inline">(looks up, addressing the room)</span> Jarvis, we want to PLY.</div>
+    <div class="beat">LIGHTS SHIFT · SOFT CHIME</div>
+    <div class="line jarvis"><span class="who">JARVIS (V.O.):</span> Good afternoon, PLYRs. Choose your theme.</div>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head">
+      <div class="scene-num">SCENE 02</div>
+      <div class="scene-title">THEME SELECT</div>
+    </div>
+    <div class="stage">HUD flicks through theme options fast: CARTOONS... TV SHOWS... SUPERHEROES... then 90s.</div>
+    <div class="line jarvis"><span class="who">JARVIS (V.O.):</span> 90s.</div>
+    <div class="beat">HUD GRAPHIC: PLYGRND x BINGO N BEATS '90s</div>
+    <div class="line"><span class="who">DAMI:</span> <span class="stage" style="display:inline">(beat, lights up)</span> Ooh, 90s... Bingo and Beats edition.</div>
+    <div class="line"><span class="who">KWAMZ:</span> <span class="stage" style="display:inline">(nodding)</span> What a time.</div>
+    <div class="beat">BEAT LANDS · THEME LOCKED IN</div>
+    <div class="line jarvis"><span class="who">JARVIS (V.O.):</span> Choose your PLYR. Suit up accordingly.</div>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head">
+      <div class="scene-num">SCENE 03</div>
+      <div class="scene-title">THE SELECT SCREEN (TEKKEN STYLE)</div>
+    </div>
+    <div class="stage">Cut to a Tekken character select screen style HUD. Cards swipe left to right, each showing Dami, Kwamz, and the models dressed as different 90s-styled PLYRs:</div>
+    <div class="cards">
+      <div class="plyr-card">BINGO<br>BADDIE</div>
+      <div class="plyr-card">HIGH<br>ROLLER</div>
+      <div class="plyr-card">BINGO<br>BARBIE</div>
+      <div class="plyr-card">CHAOS<br>AGENT</div>
+    </div>
+    <div class="stage">Dami leans in, watching the cards fly past.</div>
+    <div class="line"><span class="who">KWAMZ:</span> <span class="stage" style="display:inline">(looking at the cards)</span> Costume's gotta match the PLYR though.</div>
+    <div class="line"><span class="who">DAMI:</span> Now we're talking.</div>
+    <div class="stage">Rubs hands together, nods.</div>
+    <div class="line"><span class="who">BOTH:</span> <span class="stage" style="display:inline">(turning to camera/ceiling)</span> Jarvis, are you ready?</div>
+    <div class="line jarvis"><span class="who">JARVIS (V.O.):</span> Yes, gents. Costumes locked in. Let's bingo, let's PLY.</div>
+    <div class="beat">FIST BUMP</div>
+  </section>
+
+  <section class="scene logo-scene">
+    <div class="scene-head" style="justify-content:center;">
+      <div class="scene-title">SCENE 04 — LOGO STING</div>
+    </div>
+    <div class="stage">Quick cut to black. Beat drops.</div>
+    <div class="logo-block">BINGO N BEATS<br>x PLYGRND<br><span style="color:var(--cyan)">BANK HOLIDAY SPECIAL</span></div>
+    <div class="ticket">DATE / VENUE / TICKET LINK CARD UNDERNEATH</div>
+  </section>
+
+  <footer>MAGNUS FOREVER — PRODUCTION SCRIPT</footer>
+
+</div>
+</body>
+</html>
